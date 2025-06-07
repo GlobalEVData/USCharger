@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+.DS_Store
+data/
+result/
+data/data_usa_evse_2014-2024.json
