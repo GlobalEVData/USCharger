@@ -23,11 +23,34 @@ const { layer } = props;
 
 const handleColorBandChange = (payload) => {
   // console.log('色带变更:', payload.colorBand(0.25));
-  layer.getFillColor = [255, 0, 0, 255];
-  layer.getLineColor = [0, 255, 0, 255];
+  // 生成随机颜色
+  function getRandomColor() {
+    return [
+      Math.floor(Math.random() * 256), // R
+      Math.floor(Math.random() * 256), // G
+      Math.floor(Math.random() * 256), // B
+      255 // A
+    ];
+  }
+
+  layer.getFillColor = (d) => {
+      // 根据数据属性动态设置填充颜色
+      const value = d.properties.Year2014; // 假设数据中有一个属性叫 value
+      if (value < 10) {
+        return [255, 0, 0]; // 红色
+      } else{
+        return getRandomColor(); // 随机颜色
+      }
+    }
 
   console.log('图层:', layer);
 };  
 
 defineEmits(['toggle-expand', 'toggle-visibility']);
+
+
+// function fillColor(d) {
+//   // 根据数据属性动态设置填充颜色
+//   return [255, 0, 0, 255]; // 红色
+// }
 </script>

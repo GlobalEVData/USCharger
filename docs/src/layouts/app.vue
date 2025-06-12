@@ -24,9 +24,9 @@
 
   </el-container>
 
-  <Dragger :onClose="handleClose" v-show="isShowDragger">
+  <!-- <Dragger :onClose="handleClose" v-show="isShowDragger">
       <ColorBand/>
-  </Dragger>
+  </Dragger> -->
 
 </template>
 
@@ -98,6 +98,7 @@ const handleMapLoaded = (map) => {
 
 const updateDeckLayers = () => {
   if (deckMap) {
+    // console.log('更新图层:', layerGroup.getLayers())
     deckMap.setProps({
       ...tooltipConfig,
       layers: layerGroup.getLayers(),

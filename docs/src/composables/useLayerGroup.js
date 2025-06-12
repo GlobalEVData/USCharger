@@ -109,7 +109,8 @@ export class LayerGroup {
       
       // 收集所有状态属性
       const layerProps = {
-        id: layer.id,
+        // id: layer.id , // id + 当前时间戳
+        id: `${layer.id}-${Date.now()}`,
         pickable,
         ...layer.state, // 展开所有响应式属性
         data: layer.data // 处理数据

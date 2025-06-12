@@ -2,9 +2,10 @@ import geopandas as gpd
 import os
 
 # data/data_usa_evse_2014-2024.geojson
+# data\data_usa_evse_2014-2024.geojson
 
 DIR = os.path.dirname(os.path.abspath(__file__))
-PATH = os.path.join(DIR, '..', 'data', 'data_usa_evse_2014-2024.json')
+PATH = os.path.join(DIR, '..', 'data', 'data_usa_evse_2014-2024.geojson')
 
 SAVE_PATH = os.path.join(DIR, '..', 'data', 'data_usa_evse_2014-2024_2.json')
 
