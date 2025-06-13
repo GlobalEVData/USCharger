@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, reactive, onMounted } from 'vue';
 import useDrag from '@/composables/panel/useDrag.js';
 import usePanelState from '@/composables/panel/usePanelState.js';
 import usePanelPosition from '@/composables/panel/usePanelPosition.js';
@@ -48,14 +48,24 @@ const props = defineProps({
   initialX: { type: Number, default: null },
   initialY: { type: Number, default: 20 },
   width: { type: Number, default: 500 },
-  minWidth: { type: Number, default: 200 }
+  minWidth: { type: Number, default: 200 },
+  initialPosition: { 
+    type: String, 
+    default: null,
+    validator: (value) => !value || ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(value)
+  },
+  autoHideHeader: { type: Boolean, default: true }
 });
 
 const emit = defineEmits(['close']);
 
 const panelElement = ref(null);
 const contentElement = ref(null);
-const autoHideHeader = ref(false); // Default off
+const autoHideHeader = ref(props.autoHideHeader);
+const windowSize = reactive({
+  width: window.innerWidth,
+  height: window.innerHeight
+});
 
 const position = reactive({
   x: props.initialX,
@@ -73,12 +83,58 @@ const panelStyle = computed(() => ({
   cursor: dragging.value ? 'grabbing' : 'move',
   minWidth: `${props.minWidth}px`
 }));
+
+// 计算初始位置
+const calculateInitialPosition = () => {
+  if (!props.initialPosition) return;
+  
+  const margin = 20; // 距离边缘的边距
+  
+  switch (props.initialPosition) {
+    case 'top-left':
+      position.x = margin;
+      position.y = margin;
+      break;
+    case 'top-right':
+      position.x = windowSize.width - props.width - margin;
+      position.y = margin;
+      break;
+    case 'bottom-left':
+      position.x = margin;
+      position.y = windowSize.height - (contentElement.value?.offsetHeight || 100) - margin;
+      break;
+    case 'bottom-right':
+      position.x = windowSize.width - props.width - margin;
+      position.y = windowSize.height - (contentElement.value?.offsetHeight || 100) - margin;
+      break;
+  }
+  
+  // 确保位置不会超出屏幕
+  position.x = Math.max(0, Math.min(position.x, windowSize.width - props.minWidth));
+  position.y = Math.max(0, Math.min(position.y, windowSize.height - 50)); // 最小高度50px
+};
+
+// 监听窗口大小变化
+const handleResize = () => {
+  windowSize.width = window.innerWidth;
+  windowSize.height = window.innerHeight;
+  
+  // 如果设置了初始位置，重新计算位置
+  if (props.initialPosition) {
+    calculateInitialPosition();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+  calculateInitialPosition();
+});
 </script>
 
 <style scoped>
+/* 原有样式保持不变 */
 .draggable-panel {
   position: fixed;
-  width: 400px;
   min-width: v-bind('props.minWidth + "px"');
   border: 1px solid var(--vp-c-border);
   background: var(--vp-c-bg-soft);

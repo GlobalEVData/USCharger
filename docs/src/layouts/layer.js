@@ -1,12 +1,15 @@
-import { Layer, LayerGroup } from '@/composables/useLayerGroup.js'
+import { Layer, LayerGroup } from '@/composables/useLayerGroup.ts'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import { data } from '@/loaders/usa2014_2024.data.js'
 
+// import { data as usStates } from '@/loaders/usa_states.data.js'
+
 const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
-  opacity: 0.8,
+  opacity: 0.5,
   visible: true,
   props: {
-    getLineColor: [255, 244, 255],
+    lineWidthMinPixels: 1,
+    getLineColor: [128, 128, 128],
     getFillColor: (d) => {
       // 根据数据属性动态设置填充颜色
       const value = d.properties.Year2014; // 假设数据中有一个属性叫 value
@@ -19,14 +22,24 @@ const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
       } else {
         return [0, 128, 0]; // 绿色
       }
-    }
+    },
   },
   data
 })
 
+// const usaStatesLayer = new Layer('USA-States-Layer', GeoJsonLayer, {
+//   opacity: 0.8,
+//   visible: true,
+//   props: {
+//     getFillColor: [128, 128, 128]
+//   },
+//   data: usStates
+// })
+
 // 最终图层组合
 const layerGroup = new LayerGroup([
-  usaLayer
+  usaLayer,
+  // usaStatesLayer
 ])
 
 export { layerGroup }

@@ -12,7 +12,7 @@ import { scaleOrdinal, scaleSequential, scaleDiverging } from 'd3-scale';
  */
 export function createColorBand({
   type = 'sequential',
-  scheme = 'viridis',
+  scheme = 'ylorrd',
   domain,
   isReverse = false,
 } = {}) {

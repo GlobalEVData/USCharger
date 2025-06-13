@@ -21,7 +21,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useDraggable } from 'vue-draggable-plus';
-import { LayerGroup } from '@/composables/useLayerGroup.js';
+import { LayerGroup } from '@/composables/useLayerGroup';
 import pkg from 'lodash';
 const { throttle } = pkg;
 

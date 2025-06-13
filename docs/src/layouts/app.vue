@@ -24,9 +24,9 @@
 
   </el-container>
 
-  <!-- <Dragger :onClose="handleClose" v-show="isShowDragger">
+  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="300" :initialPosition="'bottom-right'" :autoHideHeader="true">
       <ColorBand/>
-  </Dragger> -->
+  </Dragger>
 
 </template>
 
@@ -60,7 +60,7 @@ const INITIAL_VIEW_STATE = {
   // 美国
   longitude: -95.712891,
   latitude: 37.09024,
-  pitch: 45,
+  pitch: 0,
   zoom: 4
 }
 

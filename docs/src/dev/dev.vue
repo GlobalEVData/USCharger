@@ -1,97 +1,61 @@
 <template>
-    <div class="color-band-container">
-      <ColorBandSelector
-        v-model="colorBand"
-        @change="handleColorBandChange"
-        :immediate="true"
-        :domain="[0, 1]"
-      />
-      
-      <div 
-        v-if="colorBand"
-        class="color-band-display"
-        :style="bandDisplayStyle"
-      ></div>
-      
-      <div class="color-band-test" v-if="colorBand">
-        <div 
-          v-for="i in 5" 
-          :key="i"
-          class="color-band-sample"
-          :style="{
-            backgroundColor: colorBand((i-1)/4),
-            width: '50px',
-            height: '50px',
-            display: 'inline-block',
-            margin: '5px'
-          }"
-        ></div>
-      </div>
+  <div class="color-band-display-container">
+    <div class="color-band-labels">
+      <span class="label">low</span>
+      <span class="label">high</span>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, computed } from 'vue';
-  import ColorBandSelector from '@/components/ColorBand.vue';
-  
-  const colorBand = ref(null);
-  
-  const handleColorBandChange = (payload) => {
-    // console.log('色带变更:', payload);
-    // console.log('测试色带函数 - 0.25:', colorBand.value(0.25));
-  };
-  
-  const bandDisplayStyle = computed(() => {
-    if (!colorBand.value) return {};
     
-    let background;
-    
-    // 检查是否为离散色带
-    if (colorBand.value.range && typeof colorBand.value.range === 'function') {
-      const colors = colorBand.value.range();
-      background = `linear-gradient(to right, ${colors.join(', ')})`;
-    } else {
-      // 连续或发散色带
-      background = `linear-gradient(to right, 
-        ${colorBand.value(0)}, 
-        ${colorBand.value(0.5)},
-        ${colorBand.value(1)}
-      )`;
-    }
-    
-    return {
-      background,
-      height: '30px',
-      borderRadius: '4px',
-      marginTop: '10px',
-      boxShadow: '0 0 0 1px rgba(0,0,0,0.1) inset'
-    };
-  });
-  </script>
-  
-  <style scoped>
-  .color-band-container {
-    padding: 15px;
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 8px;
-    max-width: 500px;
-    background-color: var(--vp-c-bg-soft);
-  }
-  
-  .color-band-display {
-    transition: background 0.3s ease;
-  }
-  
-  .color-band-test {
-    margin-top: 15px;
-    padding: 10px;
-    background: var(--vp-c-bg-soft-down);
-    border-radius: 4px;
-    border: 1px solid var(--vp-c-divider);
-  }
-  
-  .color-band-sample {
-    border-radius: 4px;
-    box-shadow: 0 0 0 1px var(--vp-c-divider);
-  }
-  </style>
+    <div 
+      v-if="store.currentColorBand"
+      class="color-band-preview"
+      :style="bandStyle"
+    ></div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import { useColorBandStore } from '@/stores/colorBandStore';
+
+const store = useColorBandStore();
+
+const bandStyle = computed(() => ({
+  background: store.getSelectedPreviewBackground(),
+  height: '30px',
+  width: '100%',
+  borderRadius: '4px',
+  margin: '5px 0',
+  boxShadow: '0 0 0 1px rgba(0,0,0,0.1) inset'
+}));
+
+// store.getSelectedPreviewBackground
+
+
+</script>
+
+<style scoped>
+.color-band-display-container {
+  padding: 10px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background-color: var(--vp-c-bg-soft);
+  max-width: 300px;
+}
+
+.color-band-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.label {
+  font-size: 0.8em;
+  /* 粗体 */
+  font-weight: bold;
+  color: var(--vp-c-text-1);
+}
+
+.color-band-preview {
+  transition: background 0.3s ease;
+}
+</style>

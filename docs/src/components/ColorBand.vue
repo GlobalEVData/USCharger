@@ -1,7 +1,7 @@
 <template>
   <div class="color-band-selector">
     <el-select
-      v-model="selectedScheme"
+      v-model="store.selectedScheme"
       :disabled="isDisabled"
       placeholder="选择色带"
       style="width: 100%"
@@ -10,11 +10,11 @@
       <template #prefix>
         <div
           class="selected-preview"
-          :style="{ background: getSelectedPreviewBackground() }"
+          :style="{ background: store.getSelectedPreviewBackground() }"
         ></div>
       </template>
       <el-option-group
-        v-for="group in colorSchemeGroups"
+        v-for="group in store.colorSchemeGroups"
         :key="group.label"
         :label="group.label"
       >
@@ -29,7 +29,7 @@
             <div
               class="color-band-preview"
               :style="{
-                background: getPreviewBackground(scheme),
+                background: store.getPreviewBackground(scheme),
                 height: '20px',
                 width: '120px',
                 borderRadius: '4px',
@@ -41,13 +41,13 @@
     </el-select>
 
     <div class="color-band-controls" v-if="showControls">
-      <el-checkbox
-        v-model="isReverse"
-        @change="updateColorBand"
-        :disabled="isDisabled"
-      >
-        reverse
-      </el-checkbox>
+    <el-checkbox
+      v-model="store.isReverse"
+      @change="store.updateColorBand"
+      :disabled="isDisabled"
+    >
+      reverse
+    </el-checkbox>
       <el-button
         size="small"
         type="primary"
@@ -63,15 +63,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import {
-  createColorBand,
-  colorSchemes,
-  getPredefinedInterpolator,
-  getPredefinedOrdinalScheme,
-} from '@/composables/useColorBand.js';
+import { computed, onMounted, watch } from 'vue'
+import { useColorBandStore } from '@/stores/colorBandStore'
 
-const colorSchemeGroups = ref(colorSchemes);
+const store = useColorBandStore()
 
 const props = defineProps({
   modelValue: {
@@ -98,102 +93,52 @@ const props = defineProps({
     type: Array,
     default: () => [0, 1],
   },
-});
+  // 预定义色带，从外界传入，为色带名称
+  
+  
+})
 
-const emit = defineEmits(['update:modelValue', 'change']);
+const emit = defineEmits(['update:modelValue', 'change'])
 
-const isDisabled = computed(() => props.disabled);
+const isDisabled = computed(() => props.disabled)
 
-const selectedScheme = ref(props.initialScheme);
-const isReverse = ref(false);
-const currentColorBand = ref(props.modelValue);
-
-const currentSchemeConfig = computed(() => {
-  for (const group of colorSchemeGroups.value) {
-    const found = group.options.find((s) => s.value === selectedScheme.value);
-    if (found) return found;
-  }
-  return colorSchemeGroups.value[0].options[0];
-});
-
-/**
- * 生成色带预览背景
- */
-const getPreviewBackground = (scheme) => {
-  const type = scheme?.type || currentSchemeConfig.value.type;
-  const isOrdinal = type === 'ordinal';
-
-  if (isOrdinal) {
-    const colors =
-      typeof scheme.value === 'string'
-        ? getPredefinedOrdinalScheme(scheme.value) || ['#cccccc']
-        : scheme.value || ['#cccccc'];
-    const finalColors = isReverse.value ? [...colors].reverse() : colors;
-    return `linear-gradient(to right, ${finalColors.join(', ')})`;
-  } else {
-    const interpolator =
-      getPredefinedInterpolator(scheme.value) || ((t) => '#cccccc');
-    const steps = 10;
-    const colorStops = Array.from({ length: steps }, (_, i) => {
-      const t = isReverse.value ? 1 - i / (steps - 1) : i / (steps - 1);
-      return interpolator(t);
-    });
-    return `linear-gradient(to right, ${colorStops.join(', ')})`;
-  }
-};
-
-/**
- * 生成选择框中显示的预览背景
- */
-const getSelectedPreviewBackground = () => {
-  return getPreviewBackground(currentSchemeConfig.value);
-};
-
-/**
- * 更新色带函数
- */
-const updateColorBand = () => {
-  const config = currentSchemeConfig.value;
-
-  currentColorBand.value = createColorBand({
-    type: config.type,
-    scheme: selectedScheme.value,
-    domain: props.domain,
-    isReverse: isReverse.value,
-  });
-
-  if (props.immediate) {
-    emitColorBand();
-  }
-};
+// 监听props.domain变化
+watch(() => props.domain, (newDomain) => {
+  store.setDomain(newDomain)
+}, { immediate: true })
 
 /**
  * 发射色带函数
  */
 const emitColorBand = () => {
-  emit('update:modelValue', currentColorBand.value);
+  emit('update:modelValue', store.currentColorBand)
   emit('change', {
-    colorBand: currentColorBand.value,
-    scheme: selectedScheme.value,
-    isReverse: isReverse.value,
-    type: currentSchemeConfig.value.type,
-  });
-};
+    colorBand: store.currentColorBand,
+    scheme: store.selectedScheme,
+    isReverse: store.isReverse,
+    type: store.currentSchemeConfig.type,
+  })
+}
 
 /**
  * 处理色带变更
  */
 const handleSchemeChange = () => {
-  updateColorBand();
-};
+  store.updateColorBand()
+  if (props.immediate) {
+    emitColorBand()
+  }
+}
 
 // 初始化
 onMounted(() => {
-  updateColorBand();
-  if (props.immediate) {
-    emitColorBand();
+  if (props.initialScheme) {
+    store.setScheme(props.initialScheme)
   }
-});
+  if (props.immediate) {
+    emitColorBand()
+  }
+})
 </script>
 
 <style scoped>
