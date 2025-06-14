@@ -14,10 +14,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useColorBandStore } from '@/stores/colorBandStore';
+import { computed } from 'vue'
+import { useColorBandStore } from '@/stores/colorBandStore'
 
-const store = useColorBandStore();
+const store = useColorBandStore()
 
 const bandStyle = computed(() => ({
   background: store.getSelectedPreviewBackground(),
@@ -25,12 +25,8 @@ const bandStyle = computed(() => ({
   width: '100%',
   borderRadius: '4px',
   margin: '5px 0',
-  boxShadow: '0 0 0 1px rgba(0,0,0,0.1) inset'
-}));
-
-// store.getSelectedPreviewBackground
-
-
+  boxShadow: '0 0 0 1px rgba(0,0,0,0.1) inset',
+}))
 </script>
 
 <style scoped>
