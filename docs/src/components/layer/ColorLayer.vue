@@ -51,6 +51,13 @@ import ColorBandSelector from '@/components/ColorBand.vue';
 import { createNormalizer } from '@/utils/normalizer';
 import { hexToRgbaArray } from '@/utils/color';
 
+import { useYearStore } from '@/stores/yearStore'
+import { storeToRefs } from 'pinia'
+
+const yearStore = useYearStore() // yearStore.currentYear is a ref variable
+const { currentYear } = storeToRefs(yearStore)
+
+
 const props = defineProps({
   layer: {
     type: Object,
@@ -61,7 +68,7 @@ const props = defineProps({
 const { layer } = props;
 const emit = defineEmits(['toggle-expand', 'toggle-visibility']);
 
-const currentYear = ref(2014);
+// const currentYear = ref(yearStore.currentYear || 2014);
 const isPlaying = ref(false);
 let playInterval = null;
 

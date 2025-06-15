@@ -24,7 +24,7 @@
 
   </el-container>
 
-  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="300" :initialPosition="'bottom-right'" :autoHideHeader="true">
+  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="300" :initialPosition="'top-right'" :autoHideHeader="true">
       <ColorBand/>
   </Dragger>
 
