@@ -11,52 +11,27 @@
         initialScheme="ylorrd"
         :immediate="true"
       />
-      <div class="slider-container mt-2">
-        <div class="slider-wrapper">
-          <el-slider
-            v-model="currentYear"
-            :min="2014"
-            :max="2024"
-            :step="1"
-            :show-stops="false"
-            :show-tooltip="false"
-            @change="handleYearChange"
-          />
-          
-        </div>
-
-        <div class="year-display">{{ currentYear }}</div>
-
-        <el-button
-          type="primary"
-          :icon="isPlaying ? 'CircleClose' : 'CaretRight'"
-          size="small"
-          class="play-btn"
-          @click="togglePlay"
-          plain
-        />
-        
-      </div>
-
-      
-
+      <YearSlider 
+        class="mt-2"
+        :initial-year="currentYear"
+        @year-change="handleYearChange"
+      />
     </template>
   </BaseLayerCard>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, onUnmounted } from 'vue';
+import { defineProps, defineEmits, ref, watch } from 'vue';
 import BaseLayerCard from './LayerCard.vue';
 import ColorBandSelector from '@/components/ColorBand.vue';
+import YearSlider from '@/components/YearSlider.vue';
 import { createNormalizer } from '@/utils/normalizer';
 import { hexToRgbaArray } from '@/utils/color';
-
 import { useYearStore } from '@/stores/yearStore'
 import { storeToRefs } from 'pinia'
 
-const yearStore = useYearStore() // yearStore.currentYear is a ref variable
+const yearStore = useYearStore()
 const { currentYear } = storeToRefs(yearStore)
-
 
 const props = defineProps({
   layer: {
@@ -67,10 +42,6 @@ const props = defineProps({
 
 const { layer } = props;
 const emit = defineEmits(['toggle-expand', 'toggle-visibility']);
-
-// const currentYear = ref(yearStore.currentYear || 2014);
-const isPlaying = ref(false);
-let playInterval = null;
 
 const handleYearChange = (year) => {
   updateLayerColor(year);
@@ -97,57 +68,7 @@ const handleColorBandChange = (payload) => {
   updateLayerColor(currentYear.value);
 };
 
-const togglePlay = () => {
-  isPlaying.value = !isPlaying.value;
-  if (isPlaying.value) {
-    playInterval = setInterval(() => {
-      currentYear.value = currentYear.value >= 2024 ? 2014 : currentYear.value + 1;
-    }, 1000);
-  } else {
-    clearInterval(playInterval);
-  }
-};
-
 watch(currentYear, (newYear) => {
   handleYearChange(newYear);
 });
-
-onUnmounted(() => {
-  if (playInterval) {
-    clearInterval(playInterval);
-  }
-});
 </script>
-
-<style scoped>
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 8px;
-}
-
-.slider-wrapper {
-  flex: 1;
-  position: relative;
-  padding-top: 8px;
-}
-
-.year-display {
-  font-size: 14px;
-  color: var(--el-text-color-regular);
-}
-
-.play-btn {
-  flex-shrink: 0;
-  width: 32px;
-}
-
-:deep(.el-slider__stop) {
-  display: none;
-}
-
-:deep(.el-slider__marks-text) {
-  display: none;
-}
-</style>

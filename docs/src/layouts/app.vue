@@ -1,7 +1,7 @@
 <template>
-  <el-alert type="warning">
+  <!-- <el-alert type="warning">
     {{ getWarningTime() }} <strong> 🚧 Warning! </strong> The website is under development, and some features may be incomplete or have bugs. Please be patient for updates.
-  </el-alert>
+  </el-alert> -->
 
   <el-container>
     
@@ -24,9 +24,10 @@
 
   </el-container>
 
-  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="300" :initialPosition="'top-right'" :autoHideHeader="true">
-      <ColorBand/>
+  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="400" :initialPosition="'top-right'" :autoHideHeader="true">
+      <Legend/>
   </Dragger>
+
 
 </template>
 
@@ -42,7 +43,7 @@ import SidebarToggleButton from '@/components/SidebarToggleButton.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppDrawer from '@/components/AppDrawer.vue'
 
-import ColorBand from '@/dev/dev.vue'
+import Legend from './legend.vue'
 
 import { layerGroup } from "@/layouts/layer.js"
 import { tooltipConfig } from "@/layouts/tooltip.js"

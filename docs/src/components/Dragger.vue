@@ -227,6 +227,5 @@ onMounted(() => {
   overflow-y: auto;
   flex-grow: 1;
   background-color: var(--vp-c-bg);
-  max-height: 30vh;
 }
 </style>
