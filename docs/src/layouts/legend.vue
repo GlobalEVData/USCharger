@@ -4,10 +4,7 @@
     <div class="year-value">{{ currentYear }}</div>
   </div>
 
-  <!-- BoxPlot -->
-  <BoxPlot />
-
-  <div class="color-band-display-container">
+    <div class="color-band-display-container">
     <div class="color-band-labels">
       <span class="label">low</span>
       <span class="label">high</span>
@@ -20,6 +17,10 @@
     ></div>
     
   </div>
+
+  <BoxPlot />
+
+
 </template>
 
 <script setup>

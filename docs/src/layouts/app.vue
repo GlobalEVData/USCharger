@@ -24,7 +24,7 @@
 
   </el-container>
 
-  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="400" :initialPosition="'top-right'" :autoHideHeader="true">
+  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="400" :initialPosition="'bottom-right'" :autoHideHeader="true" title="Legned" >
       <Legend/>
   </Dragger>
 
