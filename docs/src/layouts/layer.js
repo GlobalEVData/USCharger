@@ -41,6 +41,7 @@ const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
     lineWidthMinPixels: 1,
     getLineColor: [128, 128, 128],
     getFillColor: getFillColor,
+    autoHighlight: true,
   },
   data
 })
