@@ -10,6 +10,6 @@ export const themeConfig = {
         { text: 'Subscribe', link: 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAMAAYrjOiZUNFdHUDFRQ0hZSFJLRTY5VEJKTE1GVllTOS4u' }
       ]
     },
-    {text: 'Map', link: '/'},
+    {text: 'Map', link: '/map'},
   ]
 }

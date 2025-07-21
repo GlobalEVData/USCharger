@@ -55,7 +55,7 @@ const toggleCollapse = () => emit('toggle-collapse')
   /* 固定在顶部 不随滚动条移动 */
   position: sticky;
   top: 2px;
-  z-index: 2;
+  z-index: 1;
 }
 
 .control-icon {

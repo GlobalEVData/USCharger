@@ -1,10 +1,5 @@
 <template>
-  <!-- <el-alert type="warning">
-    {{ getWarningTime() }} <strong> 🚧 Warning! </strong> The website is under development, and some features may be incomplete or have bugs. Please be patient for updates.
-  </el-alert> -->
-
   <el-container>
-    
     <!-- 侧边栏折叠按钮 -->
     <SidebarToggleButton v-if="isSidebarCollapsed" :toggle-sidebar="toggleSidebar" />
 
@@ -12,7 +7,7 @@
     <AppSidebar :is-collapsed="isSidebarCollapsed">
       <SidebarControls :is-drawer-visible="visible" :is-collapsed="isSidebarCollapsed"
         @toggle-fullscreen="toggleFullScreen" @toggle-drawer="toggleDrawer" @toggle-collapse="toggleSidebar" />
-        
+
       <layers :layerGroup="layerGroup" :onUpdated="updateDeckLayers" />
 
     </AppSidebar>
@@ -24,9 +19,14 @@
 
   </el-container>
 
-  <Dragger :onClose="handleClose" v-show="isShowDragger" :width="400" :initialPosition="'bottom-right'" :autoHideHeader="true" title="Legned" >
-      <Legend/>
-  </Dragger>
+  <!-- <Dragger :onClose="handleClose" v-show="isShowDragger" :width="400" :initialPosition="'bottom-right'"
+    :autoHideHeader="true" title="Legned">
+    <Legend />
+  </Dragger> -->
+
+  <AppDrawer v-model="visible">
+    <Legend />
+  </AppDrawer>
 
 
 </template>
@@ -36,7 +36,6 @@ import { ref } from 'vue'
 import MapComponent from '@/components/map.vue'
 import { useDeckOverlay } from '@/composables/useDeckOverlay.js'
 import layers from '@/components/layer/Layers.vue'
-import EntityList from '@/components/EntityList.vue'
 
 import SidebarControls from '@/components/SidebarControls.vue'
 import SidebarToggleButton from '@/components/SidebarToggleButton.vue'
@@ -48,7 +47,7 @@ import Legend from './legend.vue'
 import { layerGroup } from "@/layouts/layer.js"
 import { tooltipConfig } from "@/layouts/tooltip.js"
 
-import Dragger from '@/components/Dragger.vue'
+// import Dragger from '@/components/Dragger.vue'
 
 const isShowDragger = ref(true)
 
@@ -74,12 +73,12 @@ let deckMap = null
 // 方法
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value
-  // // 若侧边栏打开则打开 dragger
-  // if (!isSidebarCollapsed.value) {
-  //   isShowDragger.value = true
-  // } else {
-  //   isShowDragger.value = false
-  // }
+  // 若侧边栏打开则打开 dragger
+  if (!isSidebarCollapsed.value) {
+    isShowDragger.value = true
+  } else {
+    isShowDragger.value = false
+  }
 }
 
 const toggleFullScreen = () => {
@@ -105,18 +104,5 @@ const updateDeckLayers = () => {
       layers: layerGroup.getLayers(),
     })
   }
-}
-
-// 获取警告生成的时间 精确到秒
-const getWarningTime = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 </script>
