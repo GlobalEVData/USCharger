@@ -2,13 +2,15 @@ import { Layer, LayerGroup } from '@/composables/useLayerGroup.ts'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import { data } from '@/loaders/usa2014_2024.data.js'
 
-// import { data as usStates } from '@/loaders/usa_states.data.js'
-
 import { useColorBandStore } from '@/stores/colorBandStore'
 
 import { createNormalizer } from '@/utils/normalizer';
 import { hexToRgbaArray } from '@/utils/color';
 
+import { useMapStore } from '@/stores/mapStore';
+
+const mapStore = useMapStore();
+const { selectedRegion } = mapStore;
 
 const store = useColorBandStore()
 
@@ -32,8 +34,6 @@ function getFillColor(d) {
   return res;
 }
 
-
-
 const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
   opacity: 0.5,
   visible: true,
@@ -41,24 +41,20 @@ const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
     lineWidthMinPixels: 1,
     getLineColor: [128, 128, 128],
     getFillColor: getFillColor,
-    autoHighlight: true,
+    // autoHighlight: true,
+    // onClick: (info, event) => console.log('Clicked:', info.object.properties),
+    onClick: (info, event) => {
+      if (!info.object) return; // 确保点击的是有效的对象
+      const regionData = info.object.properties;
+      mapStore.updateSelectedRegion(regionData); // 更新 Pinia store 中的选中区域
+    }
   },
   data
 })
 
-// const usaStatesLayer = new Layer('USA-States-Layer', GeoJsonLayer, {
-//   opacity: 0.8,
-//   visible: true,
-//   props: {
-//     getFillColor: [128, 128, 128]
-//   },
-//   data: usStates
-// })
-
 // 最终图层组合
 const layerGroup = new LayerGroup([
   usaLayer,
-  // usaStatesLayer
 ])
 
 export { layerGroup }

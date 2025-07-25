@@ -1,3 +1,4 @@
+// boxplotStats.ts
 /**
  * 计算箱线图所需的统计数据
  * @param data - 输入数值数组
@@ -226,4 +227,93 @@ export function computeMultiBoxplotStats(
     }
 
     return results;
+}
+
+/**
+ * 计算堆叠柱状图所需的占比数据
+ * @param data - GeoJSON的features数组
+ * @param options - 配置选项
+ * @returns 包含每年各类别占比的数组
+ */
+export function computeStackedBarData(
+  data: Array<{ properties?: Record<string, any> }>,
+  options: {
+    columns?: { startYear: number; endYear: number };
+  } = {}
+): Array<{ year: string; dc: number; l1: number; l2: number; total: number }> | null {
+  // 默认年份范围
+  let { columns = { startYear: 2014, endYear: 2024 } } = options;
+
+  // 验证年份范围
+  const { startYear, endYear } = columns;
+  if (
+    !Number.isInteger(startYear) ||
+    !Number.isInteger(endYear) ||
+    startYear > endYear ||
+    startYear < 1900 ||
+    endYear > 2100
+  ) {
+    console.warn('Invalid year range. Using default 2014-2024.');
+    columns = { startYear: 2014, endYear: 2024 };
+  }
+
+  // 生成年份列名
+  const years = Array.from(
+    { length: endYear - startYear + 1 },
+    (_, i) => `${startYear + i}`
+  );
+
+  // 初始化结果数组
+  const result: Array<{ year: string; dc: number; l1: number; l2: number; total: number }> = [];
+  let hasValidData = false;
+
+  // 遍历每年，计算总量和占比
+  for (const year of years) {
+    const totalKey = `Year${year}`;
+    const dcKey = `Year${year}_dc`;
+    const l1Key = `Year${year}_l1`;
+    const l2Key = `Year${year}_l2`;
+
+    // 统计每年的总量和各类别值
+    let totalSum = 0;
+    let dcSum = 0;
+    let l1Sum = 0;
+    let l2Sum = 0;
+
+    for (const feature of data) {
+      if (!feature?.properties) continue;
+      const total = feature.properties[totalKey];
+      const dc = feature.properties[dcKey];
+      const l1 = feature.properties[l1Key];
+      const l2 = feature.properties[l2Key];
+
+      if (typeof total === 'number' && !isNaN(total)) totalSum += total;
+      if (typeof dc === 'number' && !isNaN(dc)) dcSum += dc;
+      if (typeof l1 === 'number' && !isNaN(l1)) l1Sum += l1;
+      if (typeof l2 === 'number' && !isNaN(l2)) l2Sum += l2;
+    }
+
+    // 计算占比（避免除以零）
+    const total = totalSum > 0 ? totalSum : 1; // 防止除以零
+    const dcRatio = dcSum / total;
+    const l1Ratio = l1Sum / total;
+    const l2Ratio = l2Sum / total;
+
+    if (totalSum > 0) hasValidData = true;
+
+    result.push({
+      year,
+      dc: dcRatio,
+      l1: l1Ratio,
+      l2: l2Ratio,
+      total: totalSum,
+    });
+  }
+
+  if (!hasValidData) {
+    console.warn('No valid data found for any year.');
+    return null;
+  }
+
+  return result;
 }

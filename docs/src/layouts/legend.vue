@@ -18,19 +18,24 @@
     
   </div>
 
+  <PiePlot />
+
   <BoxPlot />
+
+  <StackedBar />
 
 
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useColorBandStore } from '@/stores/colorBandStore'
 import { useYearStore } from '@/stores/yearStore'
-import { useTransition } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 
 import BoxPlot from './boxplot/boxplot.vue'
+import StackedBar from './StackedBar/index.vue'
+import PiePlot from './piePlot/index.vue'
 
 const store = useColorBandStore()
 const yearStore = useYearStore()

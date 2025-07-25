@@ -21,14 +21,14 @@
       <el-icon><ArrowLeft /></el-icon>
     </button>
 
-    <AppDrawer v-model="visible">
+    <AppDrawer v-model="visible">      
       <Legend />
     </AppDrawer>
   </el-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import MapComponent from '@/components/map.vue'
 import { useDeckOverlay } from '@/composables/useDeckOverlay.js'
 import layers from '@/components/layer/Layers.vue'
@@ -39,6 +39,11 @@ import AppDrawer from '@/components/AppDrawer.vue'
 import Legend from './legend.vue'
 import { layerGroup } from "@/layouts/layer.js"
 import { tooltipConfig } from "@/layouts/tooltip.js"
+
+import { useMapStore } from '@/stores/mapStore';
+
+const mapStore = useMapStore();
+const selectedRegion = computed(() => mapStore.selectedRegion);
 
 // 常量定义
 const INITIAL_VIEW_STATE = {

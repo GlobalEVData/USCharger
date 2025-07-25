@@ -58,7 +58,7 @@ def post_process_csv(input_path, output_path, suffix):
     df = pd.read_csv(input_path, index_col=0)
     
     # 1. 删除重复列
-    cols_to_drop = ['GID_0', 'GID_1', 'GID_2', 'COUNTRY_x', 'NAME_1_x']
+    cols_to_drop = ['GID_0', 'GID_1', 'GID_2', 'COUNTRY_x', 'NAME_1_x', 'NAME_2_x']
     cols_to_drop = [col for col in cols_to_drop if col in df.columns]
     df = df.drop(columns=cols_to_drop)
     
@@ -72,7 +72,7 @@ def post_process_csv(input_path, output_path, suffix):
 
 def merge_child_data_to_parent(parent_geojson_path, child_csv_paths, output_geojson_path):
     """
-    将子文件的Year数据合并到父GeoJSON文件中，基于NAME_2_x匹配
+    将子文件的Year数据合并到父GeoJSON文件中，基于索引顺序合并
     最终输出合并后的GeoJSON文件
     
     参数:
@@ -83,9 +83,6 @@ def merge_child_data_to_parent(parent_geojson_path, child_csv_paths, output_geoj
     # 读取父GeoJSON文件
     parent_gdf = gpd.read_file(parent_geojson_path)
     
-    # 转换父文件为DataFrame用于合并（保留几何信息）
-    parent_df = pd.DataFrame(parent_gdf.drop(columns='geometry'))
-    
     # 遍历所有子文件
     for child_path in child_csv_paths:
         # 读取子CSV文件
@@ -94,32 +91,15 @@ def merge_child_data_to_parent(parent_geojson_path, child_csv_paths, output_geoj
         # 获取子文件中所有Year列
         year_cols = [col for col in child_df.columns if col.startswith('Year')]
         
-        # 只保留NAME_2_x和Year列用于合并
-        merge_cols = ['NAME_2_x'] + year_cols
-        child_df = child_df[merge_cols]
+        # 只保留Year列用于合并
+        child_df = child_df[year_cols]
         
-        # 基于NAME_2_x合并到父数据
-        parent_df = pd.merge(
-            parent_df,
-            child_df,
-            on='NAME_2_x',
-            how='left',
-            suffixes=('', '_drop')
-        )
-        
-        # 删除可能因合并产生的重复列
-        parent_df = parent_df.loc[:, ~parent_df.columns.str.endswith('_drop')]
-    
-    # 将合并后的数据与原始几何信息重新组合
-    merged_gdf = parent_gdf[['geometry']].merge(
-        parent_df,
-        left_index=True,
-        right_index=True,
-        how='left'
-    )
+        # 基于索引顺序合并到父数据
+        for col in year_cols:
+            parent_gdf[col] = child_df[col].values
     
     # 保存为GeoJSON
-    merged_gdf.to_file(output_geojson_path, driver='GeoJSON')
+    parent_gdf.to_file(output_geojson_path, driver='GeoJSON')
     print(f"Merged GeoJSON saved to {output_geojson_path}")
 
 if __name__ == "__main__":
