@@ -4,6 +4,8 @@
     <div class="year-value">{{ currentYear }}</div>
   </div>
 
+  <PiePlot />
+
     <div class="color-band-display-container">
     <div class="color-band-labels">
       <span class="label">low</span>
@@ -15,16 +17,9 @@
       class="color-band-preview"
       :style="bandStyle"
     ></div>
-    
   </div>
 
-  <PiePlot />
-
-  <BoxPlot />
-
-  <StackedBar />
-
-
+  
 </template>
 
 <script setup>
@@ -33,8 +28,7 @@ import { useColorBandStore } from '@/stores/colorBandStore'
 import { useYearStore } from '@/stores/yearStore'
 import { storeToRefs } from 'pinia'
 
-import BoxPlot from './boxplot/boxplot.vue'
-import StackedBar from './StackedBar/index.vue'
+
 import PiePlot from './piePlot/index.vue'
 
 const store = useColorBandStore()
@@ -92,6 +86,7 @@ const bandStyle = computed(() => ({
 
 .year-value {
   font-size: 1.5em;
-  color: orangered;
+  color: #006d5b;
+  font-weight: bold;
 }
 </style>

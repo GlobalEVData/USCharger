@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
     <div class="drawer-container" v-if="modelValue">
-      <div class="drawer" :style="{ width: size }">
+      <div class="drawer" :style="drawerStyle">
         <div class="drawer-header">
           <slot name="header">
             <span class="drawer-title">Drawer</span>
@@ -12,7 +12,7 @@
             </svg>
           </button>
         </div>
-        <div class="drawer-content">
+        <div class="drawer-content" :class="contentLayoutClass">
           <slot></slot>
         </div>
       </div>
@@ -30,12 +30,17 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: '25%'
+    default: '35%'
   },
   direction: {
     type: String,
     default: 'rtl',
     validator: (value) => ['rtl', 'ltr', 'ttb', 'btt'].includes(value)
+  },
+  flexDirection: {
+    type: String,
+    default: 'column',
+    validator: (value) => ['row', 'column', 'row-reverse', 'column-reverse'].includes(value)
   }
 })
 
@@ -57,6 +62,23 @@ const drawerPosition = computed(() => {
       return { bottom: 0, left: 0, right: 0 }
     default:
       return { right: 0, top: 0, bottom: 0 }
+  }
+})
+
+const drawerStyle = computed(() => {
+  const isVertical = props.direction === 'ttb' || props.direction === 'btt'
+  return {
+    ...drawerPosition.value,
+    [isVertical ? 'height' : 'width']: props.size,
+    [isVertical ? 'width' : 'height']: 'auto'
+  }
+})
+
+const contentLayoutClass = computed(() => {
+  return {
+    'flex-layout': true,
+    [`flex-${props.flexDirection}`]: true,
+    'is-vertical': props.direction === 'ttb' || props.direction === 'btt'
   }
 })
 </script>
@@ -86,7 +108,6 @@ const drawerPosition = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
   border-bottom: 1px solid var(--vp-c-border);
 }
 
@@ -114,9 +135,33 @@ const drawerPosition = computed(() => {
 }
 
 .drawer-content {
-  padding: 24px;
-  overflow-y: auto;
-  height: calc(100% - 65px);
+  overflow: auto;
+  height: 100%;
+}
+
+/* 弹性布局基础样式 */
+.flex-layout {
+  display: flex;
+  gap: 16px;
+}
+
+/* 弹性方向样式 */
+.flex-row {
+  flex-direction: row;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+.flex-column-reverse {
+  flex-direction: column-reverse;
+}
+
+/* 垂直方向抽屉的特殊样式 */
+.flex-layout.is-vertical {
+  flex-wrap: wrap;
 }
 
 /* 动态定位样式 */

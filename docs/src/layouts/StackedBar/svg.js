@@ -69,7 +69,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
     .attr('x', width / 2)
     .attr('y', -15)
     .attr('text-anchor', 'middle')
-    .style('font-size', '12px')
+    .style('font-size', '20px')
     .style('font-weight', 'bold')
     .style('fill', 'currentColor')
     .text('Charging Station Type Distribution by Year');

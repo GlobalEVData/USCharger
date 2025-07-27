@@ -59,9 +59,9 @@ export function drawPieChart(svgRef, data) {
         .attr('y', arc.centroid(d)[1])
         .attr('text-anchor', 'middle')
         .attr('dy', '-0.7em')
-        .style('font-size', '12px')
+        .style('font-size', '18px')
         .style('pointer-events', 'none')
-        .style('fill', '#333')
+        .style('fill', '#106a90ff') // 适应暗黑模式
         .text(d.data.type === 'empty' ? 'no data' : `${type}: ${percentage}%`);
     })
     .on('mouseout', function () {
@@ -73,7 +73,7 @@ export function drawPieChart(svgRef, data) {
   d3.select(svgRef)
     .append('text')
     .attr('x', width / 2)
-    .attr('y', margin)
+    .attr('y', height / 2 - radius - 10) // 调整标题位置
     .attr('text-anchor', 'middle')
     .style('font-size', '13px')
     .style('font-weight', 'bold')

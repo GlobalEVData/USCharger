@@ -59,12 +59,12 @@ export function drawBoxplot(svgRef, stats, currentYear) {
     .attr('x', width / 2)
     .attr('y', -15)
     .attr('text-anchor', 'middle')
-    .style('font-size', '12px')
+    .style('font-size', '20px')
     .style('font-weight', 'bold')
     .style('fill', '#374151') // 适应暗黑模式
     .style('fill', 'currentColor')
-    .text('Data Distribution by Year (1.5 IQR Whiskers)');
-
+    .text('The number of public EV chargers by year');
+// blic EV chargers by year
   stats.forEach(({ column, stats: stat }) => {
     if (!stat) return;
     const xPos = x(column.replace('Year', '')) + x.bandwidth() / 2;

@@ -17,12 +17,17 @@
     </el-main>
 
     <!-- 右侧抽屉提示图标 -->
-    <button class="drawer-toggle-icon" @click="toggleDrawer" v-if="!visible">
+    <button class="drawer-toggle-icon" @click="toggleDrager" v-if="!isShowDragger">
       <el-icon><ArrowLeft /></el-icon>
     </button>
 
-    <AppDrawer v-model="visible">      
+    <Dragger :onClose="handleClose" v-show="isShowDragger" >
       <Legend />
+      </Dragger>
+
+    <AppDrawer v-model="visible" direction="btt" flexDirection="row">   
+      <BoxPlot />
+      <StackedBar />
     </AppDrawer>
   </el-container>
 </template>
@@ -40,10 +45,16 @@ import Legend from './legend.vue'
 import { layerGroup } from "@/layouts/layer.js"
 import { tooltipConfig } from "@/layouts/tooltip.js"
 
-import { useMapStore } from '@/stores/mapStore';
+// docs\src\components\Dragger.vue
+import BoxPlot from './boxplot/boxplot.vue'
+import StackedBar from './StackedBar/index.vue'
+import Dragger from '@/components/Dragger.vue'
 
-const mapStore = useMapStore();
-const selectedRegion = computed(() => mapStore.selectedRegion);
+const isShowDragger = ref(true)
+
+const handleClose = () => {
+  isShowDragger.value = false
+}
 
 // 常量定义
 const INITIAL_VIEW_STATE = {
@@ -70,6 +81,10 @@ const toggleFullScreen = () => {
 
 const toggleDrawer = () => {
   visible.value = !visible.value
+}
+
+const toggleDrager = () => {
+  isShowDragger.value = !isShowDragger.value
 }
 
 const handleMapLoaded = (map) => {

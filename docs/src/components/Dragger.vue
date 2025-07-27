@@ -47,7 +47,7 @@ const props = defineProps({
   showClose: { type: Boolean, default: true },
   initialX: { type: Number, default: null },
   initialY: { type: Number, default: 20 },
-  width: { type: Number, default: 500 },
+  width: { type: Number, default: 400 },
   minWidth: { type: Number, default: 200 },
   initialPosition: { 
     type: String, 
