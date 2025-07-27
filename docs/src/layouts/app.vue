@@ -14,13 +14,13 @@
     <el-main style="position: relative; padding: 2px; overflow: visible;">
       <MapComponent :center="[initialViewState.longitude, initialViewState.latitude]" :zoom="initialViewState.zoom"
         :pitch="initialViewState.pitch" width="100%" height="88vh" @map-loaded="handleMapLoaded" />
-          <AppDrawer v-model="visible" direction="btt" :teleported="false">   
-            <BoxPlot />
-            <StackedBar />
-          </AppDrawer>
+      <AppDrawer v-model="visible" direction="btt" :teleported="false">
+        <BoxPlot />
+        <StackedBar />
+      </AppDrawer>
     </el-main>
 
-    <AppSidebar :is-collapsed="isSidebarCollapsed">
+    <AppSidebar :is-collapsed="isSidebarCollapsed" width="450px">
       <Legend />
     </AppSidebar>
 

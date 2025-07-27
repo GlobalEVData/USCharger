@@ -2,44 +2,24 @@
     <div class="chart-content">
         <slot></slot>
         <div v-if="showData" class="data-section">
-            <el-statistic
-                class="total-statistic"
-                :value="totalValue"
-                :precision="0"
-                title="Total Value"
-            >
+            <el-statistic class="total-statistic" :value="totalValue" :precision="0" title="Total Value">
                 <template #prefix>
                     <el-icon><data-line /></el-icon>
                 </template>
             </el-statistic>
             <el-divider />
             <div class="detail-stats">
-                <el-statistic
-                    class="detail-stat"
-                    :value="dcValue"
-                    :precision="0"
-                    title="DC"
-                >
+                <el-statistic class="detail-stat" :value="dcValue" :precision="0" title="DC">
                     <template #prefix>
                         <div class="stat-color dc"></div>
                     </template>
                 </el-statistic>
-                <el-statistic
-                    class="detail-stat"
-                    :value="l1Value"
-                    :precision="0"
-                    title="L1"
-                >
+                <el-statistic class="detail-stat" :value="l1Value" :precision="0" title="L1">
                     <template #prefix>
                         <div class="stat-color l1"></div>
                     </template>
                 </el-statistic>
-                <el-statistic
-                    class="detail-stat"
-                    :value="l2Value"
-                    :precision="0"
-                    title="L2"
-                >
+                <el-statistic class="detail-stat" :value="l2Value" :precision="0" title="L2">
                     <template #prefix>
                         <div class="stat-color l2"></div>
                     </template>
@@ -135,17 +115,17 @@ const showData = computed(() => {
 }
 
 .stat-color.dc {
-    background-color: #f97316;
-    border: 1px solid #c2410c;
+    background-color: #006d5b;
+    border: 1px solid #0cc2b6;
 }
 
 .stat-color.l1 {
-    background-color: #3b82f6;
+    background-color: #682487;
     border: 1px solid #1e40af;
 }
 
 .stat-color.l2 {
-    background-color: #10b981;
+    background-color: #84BA42;
     border: 1px solid #047857;
 }
 

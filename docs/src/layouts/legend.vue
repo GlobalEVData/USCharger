@@ -3,23 +3,21 @@
     <div class="year-title">Current Year</div>
     <div class="year-value">{{ currentYear }}</div>
   </div>
-
   <PiePlot />
+  <LineChart />
 
-    <div class="color-band-display-container">
+
+
+  <div class="color-band-display-container">
     <div class="color-band-labels">
       <span class="label">low</span>
       <span class="label">high</span>
     </div>
-    
-    <div 
-      v-if="store.currentColorBand"
-      class="color-band-preview"
-      :style="bandStyle"
-    ></div>
+
+    <div v-if="store.currentColorBand" class="color-band-preview" :style="bandStyle"></div>
   </div>
 
-  
+
 </template>
 
 <script setup>
@@ -30,6 +28,7 @@ import { storeToRefs } from 'pinia'
 
 
 import PiePlot from './piePlot/index.vue'
+import LineChart from './lineChart/index.vue'
 
 const store = useColorBandStore()
 const yearStore = useYearStore()
@@ -51,9 +50,8 @@ const bandStyle = computed(() => ({
 .color-band-display-container {
   padding: 10px;
   border-radius: 8px;
-  max-width: 300px;
-  /* 居中 */
   margin: 0 auto;
+  width: 50%;
 }
 
 .color-band-labels {

@@ -72,7 +72,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
     .style('font-size', '20px')
     .style('font-weight', 'bold')
     .style('fill', 'currentColor')
-    .text('Charging Station Type Distribution by Year');
+    .text('EV Charger Type Distribution by Year');
 
   // 堆叠柱状图
   const stack = d3.stack().keys(['dc', 'l1', 'l2']);

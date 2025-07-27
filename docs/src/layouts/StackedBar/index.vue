@@ -71,16 +71,17 @@ watchEffect(() => {
   border-radius: 2px;
   border: 1px solid #6b7280;
 }
+/* .range(['teal', '#682487', '#84BA42', '#d1d5db']);#006d5b */
 .legend-color.dc {
-  background-color: #f97316;
-  border-color: #c2410c;
+  background-color: #006d5b;
+  border-color: #0cc26d;
 }
 .legend-color.l1 {
-  background-color: #3b82f6;
+  background-color: #682487;
   border-color: #1e40af;
 }
 .legend-color.l2 {
-  background-color: #10b981;
+  background-color: #84BA42;
   border-color: #047857;
 }
 svg {

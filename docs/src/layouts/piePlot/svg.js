@@ -22,7 +22,7 @@ export function drawPieChart(svgRef, data) {
   const color = d3
     .scaleOrdinal()
     .domain(['dc', 'l1', 'l2', 'empty'])
-    .range(['#f97316', '#3b82f6', '#10b981', '#d1d5db']);
+    .range(['teal', '#682487', '#84BA42', '#d1d5db']);
 
   const pie = d3
     .pie()
