@@ -9,7 +9,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
 
   const margin = { top: 35, right: 20, bottom: 35, left: 40 };
   const width = 560 - margin.left - margin.right;
-  const height = 280 - margin.top - margin.bottom;
+  const height = 220 - margin.top - margin.bottom;
 
   const svg = d3
     .select(svgRef)
@@ -35,7 +35,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
   const color = d3
     .scaleOrdinal()
     .domain(['dc', 'l1', 'l2'])
-    .range(['#f9741699', '#3b83f6a4', '#10b9818f']);
+    .range(['teal', '#682487', '#84BA42']);
 
   // X 轴
   svg

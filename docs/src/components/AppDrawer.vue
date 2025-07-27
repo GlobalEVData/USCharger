@@ -1,5 +1,5 @@
 <template>
-  <teleport to="body">
+  <teleport to="body" :disabled="!teleported">
     <div class="drawer-container" v-if="modelValue">
       <div class="drawer" :style="drawerStyle">
         <div class="drawer-header">
@@ -12,7 +12,7 @@
             </svg>
           </button>
         </div>
-        <div class="drawer-content" :class="contentLayoutClass">
+        <div class="drawer-content">
           <slot></slot>
         </div>
       </div>
@@ -30,17 +30,11 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: '35%'
+    default: '40%'
   },
-  direction: {
-    type: String,
-    default: 'rtl',
-    validator: (value) => ['rtl', 'ltr', 'ttb', 'btt'].includes(value)
-  },
-  flexDirection: {
-    type: String,
-    default: 'column',
-    validator: (value) => ['row', 'column', 'row-reverse', 'column-reverse'].includes(value)
+  teleported: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -50,37 +44,13 @@ const closeDrawer = () => {
   emit('update:modelValue', false)
 }
 
-const drawerPosition = computed(() => {
-  switch (props.direction) {
-    case 'rtl':
-      return { right: 0, top: 0, bottom: 0 }
-    case 'ltr':
-      return { left: 0, top: 0, bottom: 0 }
-    case 'ttb':
-      return { top: 0, left: 0, right: 0 }
-    case 'btt':
-      return { bottom: 0, left: 0, right: 0 }
-    default:
-      return { right: 0, top: 0, bottom: 0 }
-  }
-})
-
-const drawerStyle = computed(() => {
-  const isVertical = props.direction === 'ttb' || props.direction === 'btt'
-  return {
-    ...drawerPosition.value,
-    [isVertical ? 'height' : 'width']: props.size,
-    [isVertical ? 'width' : 'height']: 'auto'
-  }
-})
-
-const contentLayoutClass = computed(() => {
-  return {
-    'flex-layout': true,
-    [`flex-${props.flexDirection}`]: true,
-    'is-vertical': props.direction === 'ttb' || props.direction === 'btt'
-  }
-})
+const drawerStyle = computed(() => ({
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: props.size,
+  width: props.teleported ? '100vw' : '100%'
+}))
 </script>
 
 <style scoped>
@@ -94,14 +64,21 @@ const contentLayoutClass = computed(() => {
   pointer-events: none;
 }
 
+.drawer-container:not(.is-teleported) {
+  position: absolute;
+}
+
 .drawer {
   position: fixed;
   background: var(--vp-c-bg);
   opacity: 0.9;
   border: 1px solid var(--vp-c-border);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
   pointer-events: auto;
   transition: all 0.3s ease;
+}
+
+.drawer-container:not(.is-teleported) .drawer {
+  position: absolute;
 }
 
 .drawer-header {
@@ -135,40 +112,10 @@ const contentLayoutClass = computed(() => {
 }
 
 .drawer-content {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
   overflow: auto;
   height: 100%;
-}
-
-/* 弹性布局基础样式 */
-.flex-layout {
-  display: flex;
-  gap: 16px;
-}
-
-/* 弹性方向样式 */
-.flex-row {
-  flex-direction: row;
-}
-.flex-column {
-  flex-direction: column;
-}
-.flex-row-reverse {
-  flex-direction: row-reverse;
-}
-.flex-column-reverse {
-  flex-direction: column-reverse;
-}
-
-/* 垂直方向抽屉的特殊样式 */
-.flex-layout.is-vertical {
-  flex-wrap: wrap;
-}
-
-/* 动态定位样式 */
-.drawer {
-  top: v-bind('drawerPosition.top');
-  right: v-bind('drawerPosition.right');
-  bottom: v-bind('drawerPosition.bottom');
-  left: v-bind('drawerPosition.left');
 }
 </style>

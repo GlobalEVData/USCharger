@@ -11,24 +11,19 @@
       <layers :layerGroup="layerGroup" :onUpdated="updateDeckLayers" />
     </AppSidebar>
 
-    <el-main style="padding: 2px;">
+    <el-main style="position: relative; padding: 2px; overflow: visible;">
       <MapComponent :center="[initialViewState.longitude, initialViewState.latitude]" :zoom="initialViewState.zoom"
         :pitch="initialViewState.pitch" width="100%" height="88vh" @map-loaded="handleMapLoaded" />
+          <AppDrawer v-model="visible" direction="btt" :teleported="false">   
+            <BoxPlot />
+            <StackedBar />
+          </AppDrawer>
     </el-main>
 
-    <!-- 右侧抽屉提示图标 -->
-    <button class="drawer-toggle-icon" @click="toggleDrager" v-if="!isShowDragger">
-      <el-icon><ArrowLeft /></el-icon>
-    </button>
-
-    <Dragger :onClose="handleClose" v-show="isShowDragger" >
+    <AppSidebar :is-collapsed="isSidebarCollapsed">
       <Legend />
-      </Dragger>
+    </AppSidebar>
 
-    <AppDrawer v-model="visible" direction="btt" flexDirection="row">   
-      <BoxPlot />
-      <StackedBar />
-    </AppDrawer>
   </el-container>
 </template>
 
@@ -48,13 +43,6 @@ import { tooltipConfig } from "@/layouts/tooltip.js"
 // docs\src\components\Dragger.vue
 import BoxPlot from './boxplot/boxplot.vue'
 import StackedBar from './StackedBar/index.vue'
-import Dragger from '@/components/Dragger.vue'
-
-const isShowDragger = ref(true)
-
-const handleClose = () => {
-  isShowDragger.value = false
-}
 
 // 常量定义
 const INITIAL_VIEW_STATE = {
@@ -83,9 +71,6 @@ const toggleDrawer = () => {
   visible.value = !visible.value
 }
 
-const toggleDrager = () => {
-  isShowDragger.value = !isShowDragger.value
-}
 
 const handleMapLoaded = (map) => {
   deckMap = useDeckOverlay(map)

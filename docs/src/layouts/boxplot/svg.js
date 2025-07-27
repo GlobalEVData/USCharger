@@ -10,7 +10,7 @@ export function drawBoxplot(svgRef, stats, currentYear) {
 
   const margin = { top: 35, right: 20, bottom: 35, left: 40 };
   const width = 560 - margin.left - margin.right; // 缩小约30%
-  const height = 280 - margin.top - margin.bottom; // 缩小约30%
+  const height = 220 - margin.top - margin.bottom; // 缩小约30%
 
   const svg = d3
     .select(svgRef)
@@ -70,8 +70,8 @@ export function drawBoxplot(svgRef, stats, currentYear) {
     const xPos = x(column.replace('Year', '')) + x.bandwidth() / 2;
     const boxWidth = x.bandwidth() * 0.4;
     const isCurrentYear = column === `Year${currentYear}`;
-    const fillColor = isCurrentYear ? '#f97316' : '#d1d5db';
-    const strokeColor = isCurrentYear ? '#c2410c' : '#6b7280';
+    const fillColor = isCurrentYear ? 'brown' : '#d1d5db';
+    const strokeColor = isCurrentYear ? '#cfc58fff' : '#6b7280';
 
     const boxGroup = svg.append('g')
       .attr('class', 'boxplot-group')
