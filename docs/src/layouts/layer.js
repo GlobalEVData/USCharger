@@ -41,7 +41,7 @@ const usaLayer = new Layer('USA-Layer', GeoJsonLayer, {
     lineWidthMinPixels: 1,
     getLineColor: [128, 128, 128],
     getFillColor: getFillColor,
-    // autoHighlight: true,
+    autoHighlight: true,
     // onClick: (info, event) => console.log('Clicked:', info.object.properties),
     onClick: (info, event) => {
       if (!info.object) return; // 确保点击的是有效的对象

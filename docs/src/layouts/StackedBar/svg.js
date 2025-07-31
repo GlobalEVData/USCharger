@@ -9,7 +9,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
 
   const margin = { top: 35, right: 20, bottom: 35, left: 40 };
   const width = 560 - margin.left - margin.right;
-  const height = 220 - margin.top - margin.bottom;
+  const height = 300 - margin.top - margin.bottom;
 
   const svg = d3
     .select(svgRef)
@@ -43,7 +43,7 @@ export function drawStackedBar(svgRef, data, currentYear) {
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(x))
     .selectAll('text')
-    .style('font-size', '10px');
+    .style('font-size', '12px');
 
   svg.append('text')
     .attr('transform', `translate(${width / 2},${height + margin.bottom - 5})`)

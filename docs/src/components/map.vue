@@ -1,5 +1,11 @@
 <template>
-  <div :style="{ width: width, height: height }" ref="mapContainerRef"></div>
+  <div :style="{ width: width, height: height }" class="map-container" ref="mapContainerRef">
+    <div class="map-overlay">
+      <div class="map-legend-container">
+        <slot name="legend"></slot>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -202,10 +208,33 @@ defineExpose({
 </script>
 
 <style scoped>
-#map {
+.map-container {
+  position: relative;
   width: 100%;
   height: 100%;
   border: 1px solid var(--vp-c-border);
-  position: relative;
 }
+
+.map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.map-legend-container {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  background-color: rgba(128, 128, 128, 0.186);
+  /* 模糊 */
+  backdrop-filter: blur(10px);
+}
+
 </style>

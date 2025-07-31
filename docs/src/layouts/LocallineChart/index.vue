@@ -24,22 +24,44 @@
 
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { computeStackedBarData } from '@/utils/boxplotStats.ts';
 import { useYearStore } from '@/stores/yearStore';
 import { storeToRefs } from 'pinia';
-import { data } from '@/loaders/usa2014_2024.data.js';
+import { useMapStore } from '@/stores/mapStore';
 import { drawLineChart } from './svg';
 
 const yearStore = useYearStore();
 const { currentYear } = storeToRefs(yearStore);
 const chartSvg = ref(null);
 
+const mapStore = useMapStore();
+const selectedRegion = computed(() => mapStore.selectedRegion);
 
-
+// Process selected region data into a format suitable for the line chart
 const stackedData = computed(() => {
-  return computeStackedBarData(data.features, {
-    columns: { startYear: 2014, endYear: 2024 },
+  if (!selectedRegion.value || !selectedRegion.value) {
+    return [];
+  }
+
+  const properties = selectedRegion.value;
+  const years = Array.from({ length: 11 }, (_, i) => 2014 + i); // 2014 to 2024
+  const data = years.map((year) => {
+    const total = properties[`Year${year}`] || 0;
+    const dc = properties[`Year${year}_dc`] || 0;
+    const l1 = properties[`Year${year}_l1`] || 0;
+    const l2 = properties[`Year${year}_l2`] || 0;
+
+    // Calculate percentages, handle division by zero
+    const totalNonZero = total > 0 ? total : 1; // Avoid division by zero
+    return {
+      year: year.toString(),
+      dc: total > 0 ? dc / totalNonZero : 0,
+      l1: total > 0 ? l1 / totalNonZero : 0,
+      l2: total > 0 ? l2 / totalNonZero : 0,
+      total: total > 0 ? 1 : 0, // Total is 100% if there are chargers, else 0
+    };
   });
+
+  return data;
 });
 
 watchEffect(() => {
@@ -47,8 +69,6 @@ watchEffect(() => {
     drawLineChart(chartSvg.value, stackedData.value, currentYear.value);
   }
 });
-
-
 </script>
 
 <style scoped>

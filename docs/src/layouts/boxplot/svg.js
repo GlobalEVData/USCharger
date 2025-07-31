@@ -10,7 +10,7 @@ export function drawBoxplot(svgRef, stats, currentYear) {
 
   const margin = { top: 35, right: 20, bottom: 35, left: 40 };
   const width = 560 - margin.left - margin.right; // 缩小约30%
-  const height = 220 - margin.top - margin.bottom; // 缩小约30%
+  const height = 300 - margin.top - margin.bottom; // 缩小约30%
 
   const svg = d3
     .select(svgRef)
@@ -31,12 +31,13 @@ export function drawBoxplot(svgRef, stats, currentYear) {
   const yMin = Math.min(0, d3.min(stats, (d) => (d.stats ? d.stats.whiskerMin : 0)) * 0.9);
   const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0]).nice();
 
+  // X 轴
   svg
     .append('g')
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(x))
     .selectAll('text')
-    .style('font-size', '10px');
+    .style('font-size', '12px');
 
   svg.append('text')
     .attr('transform', `translate(${width / 2},${height + margin.bottom - 5})`)
@@ -52,7 +53,7 @@ export function drawBoxplot(svgRef, stats, currentYear) {
     .attr('x', -height / 2)
     .attr('dy', '0.71em')
     .style('text-anchor', 'middle')
-    .style('font-size', '10px')
+    .style('font-size', '180px')
     .text('Value');
 
   svg.append('text')
@@ -64,7 +65,8 @@ export function drawBoxplot(svgRef, stats, currentYear) {
     .style('fill', '#374151') // 适应暗黑模式
     .style('fill', 'currentColor')
     .text('The number of public EV chargers by year');
-// blic EV chargers by year
+
+  // blic EV chargers by year
   stats.forEach(({ column, stats: stat }) => {
     if (!stat) return;
     const xPos = x(column.replace('Year', '')) + x.bandwidth() / 2;
@@ -121,7 +123,7 @@ export function drawBoxplot(svgRef, stats, currentYear) {
       .attr('stroke', strokeColor)
       .attr('stroke-width', 1);
 
-    boxGroup.on('mouseover', function() {
+    boxGroup.on('mouseover', function () {
       const year = column.replace('Year', '');
       const statsText = [
         `Year: ${year}`,
@@ -138,14 +140,14 @@ export function drawBoxplot(svgRef, stats, currentYear) {
         .attr('stroke-width', 2)
         .attr('stroke', '#000');
     })
-    .on('mouseout', function() {
-      d3.select(this).select('rect')
-        .attr('stroke-width', 1)
-        .attr('stroke', strokeColor);
-    })
-    .on('click', function() {
-      const year = parseInt(column.replace('Year', ''));
-      yearStore.currentYear = year;
-    });
+      .on('mouseout', function () {
+        d3.select(this).select('rect')
+          .attr('stroke-width', 1)
+          .attr('stroke', strokeColor);
+      })
+      .on('click', function () {
+        const year = parseInt(column.replace('Year', ''));
+        yearStore.currentYear = year;
+      });
   });
 }
