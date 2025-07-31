@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-export function drawLineChart(svgRef, data, currentYear) {
+export function drawLineChart(svgRef, data, currentYear, regionName) {
   if (!data || !svgRef) return;
 
   d3.select(svgRef).selectAll('*').remove();
@@ -91,7 +91,7 @@ export function drawLineChart(svgRef, data, currentYear) {
     .style('font-size', '20px')
     .style('font-weight', 'bold')
     .style('fill', 'currentColor')
-    .text('Local EV Charger Type Distribution by Year');
+    .text('The number of public EV chargers in ' + regionName);
 
   // Draw lines
   const line = d3

@@ -1,33 +1,38 @@
 <template>
-    <div class="chart-content">
+    <div class="chart-card">
         <slot></slot>
         <div v-if="showData" class="data-section">
-            <el-statistic class="total-statistic" :value="totalValue" :precision="0" title="Total Value">
-                <template #prefix>
-                    <el-icon><data-line /></el-icon>
-                </template>
-            </el-statistic>
-            <el-divider />
+            <div class="main-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Value</div>
+                    <div class="stat-value">{{ formatNumber(totalValue) }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Rank</div>
+                    <div class="stat-value">#{{ rankValue }}</div>
+                </div>
+            </div>
+            
             <div class="detail-stats">
-                <el-statistic class="detail-stat" :value="dcValue" :precision="0" title="DC">
-                    <template #prefix>
-                        <div class="stat-color dc"></div>
-                    </template>
-                </el-statistic>
-                <el-statistic class="detail-stat" :value="l1Value" :precision="0" title="L1">
-                    <template #prefix>
-                        <div class="stat-color l1"></div>
-                    </template>
-                </el-statistic>
-                <el-statistic class="detail-stat" :value="l2Value" :precision="0" title="L2">
-                    <template #prefix>
-                        <div class="stat-color l2"></div>
-                    </template>
-                </el-statistic>
+                <div class="detail-item">
+                    <div class="color-indicator dc"></div>
+                    <div class="detail-label">DC</div>
+                    <div class="detail-value">{{ formatNumber(dcValue) }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="color-indicator l1"></div>
+                    <div class="detail-label">L1</div>
+                    <div class="detail-value">{{ formatNumber(l1Value) }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="color-indicator l2"></div>
+                    <div class="detail-label">L2</div>
+                    <div class="detail-value">{{ formatNumber(l2Value) }}</div>
+                </div>
             </div>
         </div>
         <div v-else class="empty-state">
-            <el-empty description="No data available" :image-size="20" />
+            <div class="empty-message">No data available</div>
         </div>
     </div>
 </template>
@@ -44,11 +49,22 @@ const { currentYear } = storeToRefs(yearStore);
 const mapStore = useMapStore();
 const selectedRegion = computed(() => mapStore.selectedRegion);
 
+const formatNumber = (num) => {
+    return num?.toLocaleString() || '0';
+};
+
 const totalValue = computed(() => {
     if (!selectedRegion.value) return 0;
     const year = currentYear.value;
     const totalKey = `Year${year}`;
     return Number(selectedRegion.value[totalKey]) || 0;
+});
+
+const rankValue = computed(() => {
+    if (!selectedRegion.value) return 0;
+    const year = currentYear.value;
+    const rankKey = `Rank${year}`;
+    return Number(selectedRegion.value[rankKey]) || 0;
 });
 
 const dcValue = computed(() => {
@@ -78,59 +94,103 @@ const showData = computed(() => {
 </script>
 
 <style scoped>
-.chart-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
+.chart-card {
+    border-radius: 8px;
+    padding: 16px;
+    background-color: var(--vp-c-bg);
+    color: var(--vp-c-text);
+    border: 1px solid var(--vp-c-border);
 }
 
 .data-section {
-    width: 100%;
-    padding: 0 8px;
+    margin-top: 12px;
+    border-top: 1px solid var(--vp-c-border);
 }
 
-.total-statistic {
+.main-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--vp-c-border);
+}
+
+.stat-item {
     text-align: center;
-    margin-bottom: 12px;
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    background-color: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-2);
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
 }
 
 .detail-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
 }
 
-.detail-stat {
-    text-align: center;
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    flex: 1;
 }
 
-.stat-color {
-    display: inline-block;
+.color-indicator {
     width: 12px;
     height: 12px;
     border-radius: 2px;
-    margin-right: 6px;
-    vertical-align: middle;
+    flex-shrink: 0;
 }
 
-.stat-color.dc {
+.color-indicator.dc {
     background-color: #006d5b;
     border: 1px solid #0cc2b6;
 }
 
-.stat-color.l1 {
+.color-indicator.l1 {
     background-color: #682487;
     border: 1px solid #1e40af;
 }
 
-.stat-color.l2 {
+.color-indicator.l2 {
     background-color: #84BA42;
     border: 1px solid #047857;
 }
 
+.detail-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--vp-c-text-2);
+}
+
+.detail-value {
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: auto;
+    color: var(--vp-c-text-1);
+    background-color: var(--vp-c-bg-soft);
+}
+
 .empty-state {
-    width: 100%;
-    padding: 20px 0;
+    padding: 12px 0;
+    text-align: center;
+}
+
+.empty-message {
+    font-size: 13px;
 }
 </style>

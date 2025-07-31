@@ -64,9 +64,13 @@ const stackedData = computed(() => {
   return data;
 });
 
+const regionName = computed(() => {
+  return selectedRegion.value?.NAME_2_x || 'Unknown Region';
+});
+
 watchEffect(() => {
   if (stackedData.value && chartSvg.value) {
-    drawLineChart(chartSvg.value, stackedData.value, currentYear.value);
+    drawLineChart(chartSvg.value, stackedData.value, currentYear.value, regionName.value);
   }
 });
 </script>

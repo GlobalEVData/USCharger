@@ -75,8 +75,8 @@ export function drawPieChart(svgRef, data) {
     .attr('x', width / 2)
     .attr('y', height / 2 - radius - 10) // 调整标题位置
     .attr('text-anchor', 'middle')
-    .style('font-size', '13px')
+    .style('font-size', '14px')
     .style('font-weight', 'bold')
-    .style('fill', '#222')
+    .style('fill', 'var(--vp-c-text-1)') // 使用主题颜色
     .text(data[0]?.type === 'empty' ? 'No Data' : 'Charging Station Type Distribution');
 }
