@@ -47,7 +47,7 @@ const yearStore = useYearStore();
 const { currentYear } = storeToRefs(yearStore);
 
 const mapStore = useMapStore();
-const selectedRegion = computed(() => mapStore.selectedRegion);
+const selectedRegion = computed(() => mapStore.selectedRegion ? mapStore.selectedRegion.properties : null);
 
 const formatNumber = (num) => {
     return num?.toLocaleString() || '0';

@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import MapComponent from '@/components/map.vue'
 import { useDeckOverlay } from '@/composables/useDeckOverlay.js'
 import layers from '@/components/layer/Layers.vue'
@@ -44,6 +44,10 @@ import Overall from './overall.vue'
 
 import { layerGroup } from "@/layouts/layer.js"
 import { tooltipConfig } from "@/layouts/tooltip.js"
+
+import { useMapStore } from '@/stores/mapStore';
+
+const mapStore = useMapStore();
 
 // 常量定义
 const INITIAL_VIEW_STATE = {
@@ -74,7 +78,7 @@ const toggleDrawer = () => {
 
 
 const handleMapLoaded = (map) => {
-  deckMap = useDeckOverlay(map)
+  deckMap = useDeckOverlay(map);
   updateDeckLayers()
 }
 
@@ -86,6 +90,22 @@ const updateDeckLayers = () => {
     })
   }
 }
+
+
+// 定义选中区域的计算属性
+const selectedRegion = computed(() => {
+  return mapStore.selectedRegion;
+});
+
+
+// 在 watch 中设置标志
+watch(selectedRegion, (newRegion) => {
+  const highlightLayer = layerGroup.layers.find(l => l.id === 'Highlight-Layer');
+  highlightLayer.data = newRegion ? [newRegion] : [];
+  updateDeckLayers();
+});
+
+
 </script>
 
 <style scoped>

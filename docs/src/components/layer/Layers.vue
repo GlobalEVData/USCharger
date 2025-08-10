@@ -7,7 +7,7 @@
       <!-- <LayerCard v-for="item in layerGroup.layers" :key="item.id" :layer="item" @toggle-expand="toggleExpand"
         @toggle-visibility="toggleVisibility" /> -->
         <component 
-        :is="getCardVomponents(layer.typeName)"
+        :is="getCardVomponents(layer.id)"
         v-for="layer in layerGroup.layers"
         :key="layer.id"
         :layer="layer"
@@ -33,7 +33,7 @@ function getCardVomponents(params) {
   // console.log(params);
   // GeoJsonLayer
   switch (params) {
-    case 'GeoJsonLayer':
+    case 'USA-Layer': // 只给特定名字的图层开启 ColorLayer 选项
       return ColorLayer;
     default:
       return BasicLayerCard; // 默认返回

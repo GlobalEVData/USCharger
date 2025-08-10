@@ -34,7 +34,7 @@ const { currentYear } = storeToRefs(yearStore);
 const chartSvg = ref(null);
 
 const mapStore = useMapStore();
-const selectedRegion = computed(() => mapStore.selectedRegion);
+const selectedRegion = computed(() => mapStore.selectedRegion ? mapStore.selectedRegion.properties : null);
 
 // Process selected region data into a format suitable for the line chart
 const stackedData = computed(() => {
