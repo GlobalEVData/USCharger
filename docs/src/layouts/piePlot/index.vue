@@ -24,7 +24,7 @@ const yearStore = useYearStore();
 const { currentYear } = storeToRefs(yearStore);
 
 const mapStore = useMapStore();
-const selectedRegion = computed(() => mapStore.selectedRegion);
+const selectedRegion = computed(() => mapStore.selectedRegion ? mapStore.selectedRegion.properties : null);
 
 const regionName = computed(() => {
   return selectedRegion.value?.NAME_1_x +" "+ selectedRegion.value?.NAME_2_x || 'Unknown Region';

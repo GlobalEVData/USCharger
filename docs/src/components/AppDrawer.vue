@@ -30,7 +30,7 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Panel'
+    default: ''
   },
   width: {
     type: String,
@@ -64,8 +64,8 @@ const panelStyle = computed(() => {
 <style scoped>
 .attached-panel {
   position: absolute;
-  background: var(--vp-c-bg, #ffffff);
-  border: 1px solid var(--vp-c-divider, #e5e7eb);
+  background:  var(--vp-c-bg);
+  border-top: 1px solid var(--vp-c-divider, #e5e7eb);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   z-index: 10;
   display: flex;
