@@ -52,7 +52,7 @@ const props = defineProps({
 });
 
 const { layerGroup, onUpdated } = props;
-const isLayerListVisible = ref(true);
+const isLayerListVisible = ref(false);
 
 const throttledUpdate = throttle(() => {
   onUpdated();

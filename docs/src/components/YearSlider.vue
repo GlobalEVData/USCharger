@@ -13,11 +13,15 @@
       />
     </div>
     <el-button
-      :icon="isPlaying ? 'VideoPause' : 'VideoPlay'"
       class="play-btn"
       @click="togglePlay"
+      size="large"
       circle
-    />
+    >
+      <el-icon :size="32">
+      <component :is="isPlaying ? 'VideoPause' : 'VideoPlay'" />
+      </el-icon>
+    </el-button>
   </div>
 </template>
 
@@ -60,32 +64,57 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* 容器样式 */
 .slider-container {
-  width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
-  border-radius: 8px;
-  margin: 16px 0;
+  gap: 12px;
+  padding: 6px 30px;
+  margin: 12px 0;
 }
 
 .slider-wrapper {
   flex: 1;
 }
 
+/* 按钮样式 */
 .play-btn {
-  width: 24px;
-  height: 24px;
-  border: none;
+  color: var(--vp-c-brand-2); /* 绿色主题色 */
+  opacity: 0.3;
 }
 
-
-:deep(.el-slider__stop) {
-  display: none;
+/* 覆盖 Element Plus 滑块样式 */
+:deep(.custom-slider) {
+  height: 40px;
 }
 
-:deep(.el-slider__marks-text) {
-  display: none;
+/* 滑块轨道 */
+:deep(.el-slider__runway) {
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgba(128, 128, 128, 0.171); /* 灰色轨道 */
+  transition: background-color 0.3s ease;
 }
+
+/* 滑块填充 */
+:deep(.el-slider__bar) {
+  height: 8px;
+  background-color: var(--vp-c-brand-2); /* 绿色主题色 */
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  opacity: 0.3;
+}
+
+/* 滑块手柄 */
+:deep(.el-slider__button-wrapper) {
+  top: -16px;
+}
+
+:deep(.el-slider__button) {
+  width: 20px;
+  height: 20px;
+  background-color: var(--vp-c-brand-2); /* 绿色主题色 */
+  border: 2px solid var(--vp-c-brand-3); /* 绿色主题色 */
+}
+
 </style>
