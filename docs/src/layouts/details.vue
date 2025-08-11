@@ -2,12 +2,14 @@
   <div class="year-display">
     <div class="year-title">Current Year</div>
     <div class="year-value">{{ currentYear }}</div>
+    <YearSlider />
   </div>
   <PiePlot />
   <LineChart />
 </template>
 
 <script setup>
+import YearSlider from '@/components/YearSlider.vue';
 import { useYearStore } from '@/stores/yearStore'
 import { storeToRefs } from 'pinia'
 

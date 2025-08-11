@@ -7,18 +7,16 @@
         :max="2024"
         :step="1"
         :show-stops="false"
-        :show-tooltip="false"
+        :show-tooltip="true"
         @change="handleYearChange"
+        class="custom-slider"
       />
     </div>
-    <div class="year-display">{{ currentYear }}</div>
     <el-button
-      type="primary"
-      :icon="isPlaying ? 'CircleClose' : 'CaretRight'"
-      size="small"
+      :icon="isPlaying ? 'VideoPause' : 'VideoPlay'"
       class="play-btn"
       @click="togglePlay"
-      plain
+      circle
     />
   </div>
 </template>
@@ -63,27 +61,25 @@ onUnmounted(() => {
 
 <style scoped>
 .slider-container {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 8px;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
 }
 
 .slider-wrapper {
   flex: 1;
-  position: relative;
-  padding-top: 8px;
-}
-
-.year-display {
-  font-size: 14px;
-  color: var(--el-text-color-regular);
 }
 
 .play-btn {
-  flex-shrink: 0;
-  width: 32px;
+  width: 24px;
+  height: 24px;
+  border: none;
 }
+
 
 :deep(.el-slider__stop) {
   display: none;
