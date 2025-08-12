@@ -1,5 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue';
+import { Loading } from '@element-plus/icons-vue';
+
+// 异步加载 ElImage 组件
+const ElImage = defineAsyncComponent({
+    loader: () => import('element-plus').then(module => module.ElImage),
+    delay: 20, // 延迟200ms触发loading
+    timeout: 30000, // 30秒超时
+});
 
 const props = defineProps({
     src: { type: String, required: true },
@@ -11,31 +19,40 @@ const props = defineProps({
     fit: { type: String, default: 'contain' },
     borderRadius: { type: String, default: '8px' },
     background: { type: String, default: 'white' },
-})
+});
 
 const figureStyle = computed(() => ({
     '--background': props.background,
     '--border-radius': props.borderRadius,
-    '--container-padding': typeof props.containerPadding === 'number' 
-        ? `${props.containerPadding}px` 
+    '--container-padding': typeof props.containerPadding === 'number'
+        ? `${props.containerPadding}px`
         : props.containerPadding,
-    '--container-width': typeof props.containerWidth === 'number' 
-        ? `${props.containerWidth}px` 
+    '--container-width': typeof props.containerWidth === 'number'
+        ? `${props.containerWidth}px`
         : props.containerWidth,
-    '--image-width': typeof props.width === 'number' 
-        ? `${props.width}px` 
+    '--image-width': typeof props.width === 'number'
+        ? `${props.width}px`
         : props.width,
-}))
+}));
 </script>
 
 <template>
     <figure :style="figureStyle" class="image-wrapper">
-        <ElImage
-            :src="src"
-            :alt="alt"
-            :fit="fit"
-            class="image-content"
-        />
+        <Suspense>
+            <template #default>
+                <ElImage :src="src" :alt="alt" :fit="fit" class="image-content" lazy />
+            </template>
+            <template #fallback>
+                <div class="loading-overlay">
+                    <div class="loading-spinner">
+                        <el-icon class="is-loading" size="50">
+                            <Loading />
+                        </el-icon>
+                        <p>图片加载中...</p>
+                    </div>
+                </div>
+            </template>
+        </Suspense>
         <figcaption v-if="caption" class="image-caption">{{ caption }}</figcaption>
     </figure>
 </template>
@@ -78,4 +95,26 @@ const figureStyle = computed(() => ({
     word-wrap: break-word;
 }
 
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.loading-spinner p {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+}
 </style>
