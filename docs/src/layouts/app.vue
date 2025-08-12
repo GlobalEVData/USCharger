@@ -1,136 +1,160 @@
 <template>
-  <el-container>
-    <!-- 侧边栏折叠按钮 -->
-    <SidebarToggleButton v-if="isSidebarCollapsed" :toggle-sidebar="toggleSidebar" />
-
-    <!-- 侧边栏 -->
-    <AppSidebar :is-collapsed="isSidebarCollapsed" width="450px">
-      
-      <SidebarControls :is-drawer-visible="visible" :is-collapsed="isSidebarCollapsed"
-        @toggle-fullscreen="toggleFullScreen" @toggle-drawer="toggleDrawer" @toggle-collapse="toggleSidebar" />
-        <SearchComponent @select="handleLocationSelect" />
-        <Details />
-      <layers :layerGroup="layerGroup" :onUpdated="updateDeckLayers" />
-    </AppSidebar>
-
-    <el-main style="position: relative; padding: 2px; overflow: visible;">
-      <MapComponent :center="[initialViewState.longitude, initialViewState.latitude]" :zoom="initialViewState.zoom"
-        :pitch="initialViewState.pitch" width="100%" height="88vh" @map-loaded="handleMapLoaded" ref="map">
-        <template #legend>
-          <Legend></Legend>
-        </template>
-      </MapComponent>
-      <AppDrawer v-model="visible">
-        <Overall />
-      </AppDrawer>
-    </el-main>
-
-  </el-container>
+  <Suspense>
+    <template #default>
+      <el-container>
+        <SidebarToggleButton v-if="isSidebarCollapsed" :toggle-sidebar="toggleSidebar" />
+        <AppSidebar :is-collapsed="isSidebarCollapsed" width="450px">
+          <SidebarControls
+            :is-drawer-visible="visible"
+            :is-collapsed="isSidebarCollapsed"
+            @toggle-fullscreen="toggleFullScreen"
+            @toggle-drawer="toggleDrawer"
+            @toggle-collapse="toggleSidebar"
+          />
+          <SearchComponent @select="handleLocationSelect" />
+          <Details />
+          <layers :layerGroup="layerGroup" :onUpdated="updateDeckLayers" />
+        </AppSidebar>
+        <el-main style="position: relative; padding: 2px; overflow: visible;">
+          <MapComponent
+            :center="[initialViewState.longitude, initialViewState.latitude]"
+            :zoom="initialViewState.zoom"
+            :pitch="initialViewState.pitch"
+            width="100%"
+            height="88vh"
+            @map-loaded="handleMapLoaded"
+            ref="map"
+          >
+            <template #legend>
+              <Legend />
+            </template>
+          </MapComponent>
+          <AppDrawer v-model="visible">
+            <Overall />
+          </AppDrawer>
+        </el-main>
+      </el-container>
+    </template>
+    <template #fallback>
+      <div class="loading-overlay">
+        <div class="loading-spinner">
+          <el-icon class="is-loading" size="50">
+            <Loading />
+          </el-icon>
+          <p>Loading map data...</p>
+        </div>
+      </div>
+    </template>
+  </Suspense>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
-import MapComponent from '@/components/map.vue'
-import { useDeckOverlay } from '@/composables/useDeckOverlay.js'
-import layers from '@/components/layer/Layers.vue'
-import SidebarControls from '@/components/SidebarControls.vue'
-import SidebarToggleButton from '@/components/SidebarToggleButton.vue'
-import AppSidebar from '@/components/AppSidebar.vue'
-import AppDrawer from '@/components/AppDrawer.vue'
-import Details from './details.vue'
-
-import Legend from './legend.vue'
-
-import Overall from './overall.vue'
-
-import { layerGroup } from "@/layouts/layer.js"
-import { tooltipConfig } from "@/layouts/tooltip.js"
-
-
-import SearchComponent from './search/SearchComponent.vue'
-import { calculateGeoJsonCentroid } from '@/layouts/utils'
-
+import { ref, watch, computed, defineAsyncComponent } from 'vue';
+import { Loading } from '@element-plus/icons-vue';
 import { useMapStore } from '@/stores/mapStore';
+import { calculateGeoJsonCentroid } from '@/layouts/utils';
+import { layerGroup } from '@/layouts/layer.js';
+import { useDeckOverlay } from '@/composables/useDeckOverlay.js';
+
+// 异步加载子组件
+const MapComponent = defineAsyncComponent({
+  loader: () => import('@/components/map.vue'),
+  delay: 200, // 延迟200ms触发loading
+  timeout: 30000, // 30秒超时
+});
+const AppSidebar = defineAsyncComponent(() => import('@/components/AppSidebar.vue'));
+const SidebarControls = defineAsyncComponent(() => import('@/components/SidebarControls.vue'));
+const SidebarToggleButton = defineAsyncComponent(() => import('@/components/SidebarToggleButton.vue'));
+const AppDrawer = defineAsyncComponent(() => import('@/components/AppDrawer.vue'));
+const Details = defineAsyncComponent(() => import('./details.vue'));
+const Legend = defineAsyncComponent(() => import('./legend.vue'));
+const Overall = defineAsyncComponent(() => import('./overall.vue'));
+const SearchComponent = defineAsyncComponent(() => import('./search/SearchComponent.vue'));
+const Layers = defineAsyncComponent(() => import('@/components/layer/Layers.vue'));
 
 const mapStore = useMapStore();
-
-const handleLocationSelect = (location) => {
-  mapStore.updateSelectedRegion(location);
-}
-
-// 常量定义
-const INITIAL_VIEW_STATE = {
+const initialViewState = ref({
   longitude: -95.712891,
   latitude: 37.09024,
   pitch: 0,
-  zoom: 4
-}
+  zoom: 4,
+});
+const visible = ref(true);
+const isSidebarCollapsed = ref(false);
+const map = ref(null);
+let deckMap = null;
 
-// 响应式状态
-const initialViewState = ref(INITIAL_VIEW_STATE)
-const visible = ref(true)
-const isSidebarCollapsed = ref(false)
-let deckMap = null
+const handleLocationSelect = (location) => {
+  mapStore.updateSelectedRegion(location);
+};
 
-const map = ref(null)
-
-// 方法
 const toggleSidebar = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
-}
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
 
 const toggleFullScreen = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
-}
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
 
 const toggleDrawer = () => {
-  visible.value = !visible.value
-}
+  visible.value = !visible.value;
+};
 
-
-const handleMapLoaded = (map) => {
-  deckMap = useDeckOverlay(map);
-  updateDeckLayers()
-}
+const handleMapLoaded = (mapInstance) => {
+  deckMap = useDeckOverlay(mapInstance);
+  updateDeckLayers();
+};
 
 const updateDeckLayers = () => {
   if (deckMap) {
     deckMap.setProps({
-      // ...tooltipConfig,
       layers: layerGroup.getLayers(),
-    })
+    });
   }
-}
+};
 
+const selectedRegion = computed(() => mapStore.selectedRegion);
 
-// 定义选中区域的计算属性
-const selectedRegion = computed(() => {
-  return mapStore.selectedRegion;
-});
-
-
-// 在 watch 中设置标志
 watch(selectedRegion, (newRegion) => {
-  const highlightLayer = layerGroup.layers.find(l => l.id === 'Highlight-Layer');
+  const highlightLayer = layerGroup.layers.find((l) => l.id === 'Highlight-Layer');
   highlightLayer.data = newRegion ? [newRegion] : [];
   updateDeckLayers();
-if (newRegion) {
-  const centroid = calculateGeoJsonCentroid(newRegion.geometry);
-  // 由于下方有一个抽屉遮挡，所以尝试将纵向偏移一个小量
-  centroid[1] -= 0.5; // 向北偏移0.01度
-
-  map.value.flyTo({
-    center: centroid,
-    zoom: 6,
-    duration: 1000
-  });
-}
+  if (newRegion) {
+    const centroid = calculateGeoJsonCentroid(newRegion.geometry);
+    centroid[1] -= 0.5; // 向北偏移
+    map.value.flyTo({
+      center: centroid,
+      zoom: 6,
+      duration: 1000,
+    });
+  }
 });
-
-
 </script>
 
 <style scoped>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.loading-spinner p {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
 .drawer-toggle-icon {
   position: fixed;
   right: 16px;
