@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.DS_Store
+
+result/
+data/data_usa_evse_2014-2024.json
+
+docs/.vitepress/dist
+docs/.vitepress/cache
+data/data_usa_evse_2014-2024.geojson
+tmp
+data/data_usa_evse_count_2014-2024_converted.json
