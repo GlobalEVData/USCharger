@@ -5,7 +5,7 @@ import { viteConfig } from './viteConfig';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "USA Chargers",
-  base: '',
+  base: '/',
   //base: '/USCharger/',
 
   themeConfig: themeConfig,
