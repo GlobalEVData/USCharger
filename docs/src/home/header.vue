@@ -7,7 +7,7 @@
         <p class="watermark">This work is part of the <a class="link" href="https://globalevdata.github.io" target="_blank">Global EV Data Initiative</a>.</p>
       </h1>
       <div class="links-container">
-        <a href="https://globalevdata.github.io" class="link">Global EV Data Initiative</a>
+        <a href="https://globalevdata.github.io" class="link" target="_blank">Global EV Data Initiative</a>
         <span class="divider">•</span>
         <a href="https://github.com/Ruichen-giser/US-accessibility" target="_blank" class="link">Code</a>
         <span class="divider">•</span>
