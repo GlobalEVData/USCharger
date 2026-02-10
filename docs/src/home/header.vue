@@ -2,7 +2,7 @@
   <div class="intro-section">
     <div class="content-wrapper">
       <h1>
-        <span class="highlight">Improved Accessibility and Equity of Public Electric Vehicle Charger System</span>
+        <span class="highlight">Improved Equity of U.S. Public Electric Vehicle Charger System with Geospatial Disparities</span>
         <br>
         <span class="subtitle" ref="subtitle">in the United States with Geospatial Disparities</span>
         <p class="watermark">This work is part of the <a class="link" href="https://globalevdata.github.io/">Global EV Data Initiative</a>.</p>
@@ -14,7 +14,7 @@
       </div>
       <hr class="decorative-line">
       <div class="intro-text">
-        <p>The electric vehicle charging system (EVCS) constitutes a foundational component of both urban mobility and the transportation-energy nexus. Its spatial siting and charger configuration critically shape residents’ accessibility to and availability of charging services. This study investigates the evolution of public EVCS in the United States from 2014 to 2024, with a focus on the trajectory of potential charging accessibility and equity from both population-based and facility-based perspectives, highlighting the interactions between EVCS and population distribution as well as EVCS and facility locations.</p>      </div>
+        <p>The electric vehicle charging system (EVCS) constitutes a foundational component of both urban mobility and the transportation-energy nexus. Its spatial siting and charger configuration critically shape residents’ accessibility to and availability of charging services. This study investigates the evolution of public EVCS in the United States from 2014 to 2024, with a focus on the trajectory of potential charging accessibility and equity from both population-based and facility-based perspectives.</p>      </div>
     </div>
     <p class="hint">↓ Scroll down to continue ↓</p>
   </div>

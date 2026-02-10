@@ -34,12 +34,7 @@ The removal of AC L1 chargers reduces county-level accessibility and may even di
 
 > Fig. 4 | A. Distributional changes of each county’s population- and facility-based accessibility by charger type over the study period. B. Changes in the population-based accessibility share contributed by AC Level 1 chargers from 2014 to 2024 across the 368 counties that had AC Level 1 chargers in 2014. 
 
-> Population-based Acc. Interactive Map : [Click Here]()
-
-> Facility-based Acc. Interactive Map : [Click Here]()
-
-
-Assuming fast charging suits short-stay activities (under one hour) and slow charging suits long-stay activities (over one hour), individuals engaged in meals or shopping tend to have more fast charging opportunities, while those involved in school, daycare, or religious activities face fewer opportunities for either type.
+Assuming fast charging suits short-stay activities (under one hour) and slow charging suits long-stay activities (over one hour), individuals engaged in meals tend to have greater access to fast charging opportunities, while those visiting medical or dental services have access to both types. In contrast, individuals involved in social or recreational activities encounter fewer slow charging opportunities.
 
 <Figure :src="imageSrc5" />
 
@@ -52,11 +47,7 @@ Over the past decade, both population- and facility-based equity have improved a
 
 > Fig. 6 | Distributional changes in population- and facility-based equity for counties with charging access by charger type over the study period. 
 
-> Population-based Equity Interactive Map : [Click Here]()
-
-> Facility-based Equity Interactive Map : [Click Here]()
-
-Urban areas show higher charging accessibility and more equitable distribution than rural areas. 
+Urban areas show higher charging accessibility and a more equitable distribution than rural areas, together with a faster rate of improvement, thereby widening the urban–rural gap in charging services.
 
 <Figure :src="imageSrc7" />
 
