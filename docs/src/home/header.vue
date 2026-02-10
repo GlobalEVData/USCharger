@@ -4,13 +4,14 @@
       <h1>
         <span class="highlight">Improved Equity of U.S. Public Electric Vehicle Charger System with Geospatial Disparities</span>
         <br>
-        <span class="subtitle" ref="subtitle">in the United States with Geospatial Disparities</span>
         <p class="watermark">This work is part of the <a class="link" href="https://globalevdata.github.io/">Global EV Data Initiative</a>.</p>
       </h1>
       <div class="links-container">
         <a href="https://globalevdata.github.io/" class="link">Global EV Data Initiative</a>
         <span class="divider">•</span>
-        <a href="https://github.com/XanderPENG/global-evcs" class="link">Code</a>
+        <a href="https://github.com/Ruichen-giser/US-accessibility" class="link">Code</a>
+        <span class="divider">•</span>
+        <a href="./map/A/" class="link">Map</a>
       </div>
       <hr class="decorative-line">
       <div class="intro-text">
